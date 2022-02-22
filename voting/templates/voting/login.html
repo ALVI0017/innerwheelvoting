@@ -1,0 +1,97 @@
+{% extends "voting/base.html" %}
+{% load static %}
+{% block content %}
+<br>
+<div class="row card" style="justify-content:center"align="center">
+    
+    <p id="demo">  
+    </p>
+</div>
+{% if countdown.view_flag == 'true' %}
+<div class="login-box" style="background-color:white; padding:40px " >
+    <div class="login-logo">
+        <img src="{% static 'images/logo.png' %}" width="100" height="100" />
+     <img src="{% static 'images/logo1.png' %}" width="100" height="100" />
+        <br>
+        <b> Inner Wheel Election 2020 </b>
+    </div>
+
+    <div class="login-box-body">
+        <p class="login-box-msg">Sign in to start Voting</p>
+
+        <form action="{% url 'account_login' %}" method="POST">
+            {% csrf_token %}
+            {% comment %} <div class="form-group has-feedback">
+                <input type="text" class="form-control" name="email" placeholder="Email" required>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div> {% endcomment %}
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" name="username" placeholder="Full Name" required>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" name="password" placeholder="Password" required>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-4" >
+                    <button type="submit"  class="btn btn-primary btn-block btn-flat" name="login" style="width:120px"><i
+                            class="fa fa-sign-in" ></i> Sign In</button>
+                </div>
+                <p id="demo" ></p>
+                {% comment %} <div class="pull-right col-xs-4">
+                    <a  class="btn btn-primary btn-block btn-flat" href="{% url 'account_register' %}"><i class="fa fa-upload"></i> Register</a>
+                </div> {% endcomment %}
+            </div>
+        </form>
+    </div>
+  
+   
+</div>
+{%endif%}
+    
+
+    
+ 
+
+ 
+{% endblock content %} 
+
+
+
+{% block custom_js %}
+<script>
+    // Set the date we're counting down to
+    var context_var= "{{datetime_js}}";
+    console.log(context_var)
+    var countDownDate = new Date(context_var).getTime();
+    
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+    
+      // Get today's date and time
+      var now = new Date().getTime();
+    
+      // Find the distance between now and the count down date
+      var distance = countDownDate - now;
+    
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+      // Display the result in the element with id="demo"
+      document.getElementById("demo").innerHTML =  " <h3>Vote Time Count Down</h3> <h2>" + hours + "h "
+      + minutes + "m " + seconds + "s " +"</h2>";
+      // If the count down is finished, write some text
+      if (distance < 0) {
+        clearInterval(x);
+
+        document.getElementById("demo").innerHTML = `<h1>Voting Time is Over</h1><br> <h2>Thank You for your participation </h2> <h3>Here is the result</h2><img src="/media/{{ countdown.result_photo }}">`;
+       
+      }
+    }, 1000);
+</script>
+ 
+{% endblock custom_js %}
